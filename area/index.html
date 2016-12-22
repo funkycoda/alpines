@@ -12,7 +12,7 @@
 }
 </style>
 <body>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 var dispatch = d3.dispatch("load", "statechange");
 var groups = [
@@ -25,7 +25,7 @@ var groups = [
   "Mountain with frost",
   "Mountain without frost"
 ];
-d3.csv("data.csv", type, function(error, states) {
+d3.csv("dataarea.csv", type, function(error, states) {
   if (error) throw error;
   var stateById = d3.map();
   states.forEach(function(d) { stateById.set(d.id, d); });
@@ -113,13 +113,12 @@ dispatch.on("load.pie", function(stateById) {
           };
         });
   });
-    
 // Add title	  
 	svg.append("svg:text")
 		   .attr("class", "title")
 	   .attr("x", -430)
 	   .attr("y", 200)
-	   .text("Human population in mountain terrain");
+	   .text("Area of mountain terrain");
 var color_hash = {  
  0: ["Nival" , "#50aeb7"],
  1: ["Upper alpine" , "#56cdac"],
@@ -157,7 +156,6 @@ var color_hash = {
           .text(color_hash[String(i)][0]);
       });
 });
-    
 //COFFFFEEEEEEEE!!!!
 function type(d) {
   d.total = d3.sum(groups, function(k) { return d[k] = +d[k]; });
