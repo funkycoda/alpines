@@ -1,5 +1,5 @@
 # Moutains
 
-## Area
+## [Area](https://funkycoda.github.io/mountains/area)
 
-## Population
+## [Population](https://funkycoda.github.io/mountains/pop)
