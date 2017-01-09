@@ -10,6 +10,26 @@
   stroke: #000;
   shape-rendering: crispEdges;
 }
+    
+/* ADD CUSTOM STYLES FOR PIE PATH ON HOVER*/
+.piePath:hover {
+    stroke: #888888;
+}
+    
+/* ADD CUSTOM STYLES FOR TOOLTIP */  
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 28px;
+  padding: 8px;
+  margin-top: -35px;
+  font: 10px sans-serif;
+  background: #ddd;
+  pointer-events: none;
+}
+    
+    
 </style>
 <body>
 <script src="//edit.cms.unibe.ch/++resource++zms_/iframeresizer/iframeResizer.contentWindow.min.js"></script>
@@ -81,8 +101,29 @@ dispatch.on("load.bar", function(stateById) {
         .attr("height", y(0) - y(d.total));
   });
 });
-// A donut which shows bioinformatics time
+// A donut which shows areas by climatic belt in mountains
 dispatch.on("load.pie", function(stateById) {
+    
+     // FUNCTIONS FOR MOUSEOVER
+    var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("display", "none");
+    
+    function mouseover() {
+      div.style("display", "inline");
+    }
+
+    function mousemove(d) {
+      div
+          .html(d.data + ":<br>" + d.value)
+          .style("left", (d3.event.pageX - 34) + "px")
+          .style("top", (d3.event.pageY - 12) + "px");
+    }
+
+    function mouseout() {
+      div.style("display", "none");
+    }
+    
   var width = 880,
       height = 460,
       radius = Math.min(width, height) / 2;
@@ -102,7 +143,13 @@ dispatch.on("load.pie", function(stateById) {
   var path = svg.selectAll("path")
       .data(groups)
     .enter().append("path")
+      // ADD CLASS TO PATH
+      .attr("class","piePath")
       .style("fill", color)
+      // SHOW TOOLTIP WHEN MOUSE OVER BAR, MOVE POINTER WHILE MOVING AND REMOVE TOOLTIP ON MOUSEOUT
+      .on("mouseover", function() {mouseover()})
+      .on("mousemove", function(d) {mousemove(d)})
+      .on("mouseout", function() {mouseout()})
       .each(function() { this._current = {startAngle: 0, endAngle: 0}; });
   dispatch.on("statechange.pie", function(d) {
     path.data(pie.value(function(g) { return d[g]; })(groups)).transition()
@@ -112,7 +159,7 @@ dispatch.on("load.pie", function(stateById) {
           return function(t) {
             return arc(interpolate(t));
           };
-        });
+        });      
   });
 // Add title	  
 	svg.append("svg:text")
@@ -157,7 +204,7 @@ var color_hash = {
           .text(color_hash[String(i)][0]);
       });
 });
-//COFFFFEEEEEEEE!!!!
+//BRAVO!!!!
 function type(d) {
   d.total = d3.sum(groups, function(k) { return d[k] = +d[k]; });
   return d;
